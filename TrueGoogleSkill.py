@@ -13,7 +13,7 @@ from google.auth.transport.requests import Request
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # The ID and range of a sample spreadsheet.
-ELOSheetID = '12G9BlIK8G016WrDVvfoOUnsgMsAvLoWxxeh6o7EA624'
+ELOSheetID = '140bFCoPDWE6gl4iaq0xUiE7j6TWsacAJ1w654bLnFQI'
 
 creds = None
 
@@ -44,13 +44,13 @@ def processNewTourney():
     # Get matches
     sheet = service.spreadsheets()
     result = sheet.values().get(spreadsheetId=ELOSheetID,
-                                range='Test!A3:F').execute()
+                                range='TrueSkill!A3:F').execute()
     matchList = result.get('values', [])
     #End of Google Sheets API Code
 
     #Get players
     result = sheet.values().get(spreadsheetId=ELOSheetID,
-                                range='Test!L3:N').execute()
+                                range='TrueSkill!L3:N').execute()
     tempPlayerList = result.get('values',[])
 
     #Put players in string list
@@ -83,7 +83,7 @@ def processNewTourney():
     #Format data into json format
     data = [
         {
-            'range': 'Test!A3:F',
+            'range': 'TrueSkill!A3:F',
             'values': matchList
         },
     ]
@@ -104,8 +104,8 @@ def processNewTourney():
     
     print('---Leaderboard---')
     for player in playerList:
-        mu.append(leaderboard[playerList.index(player)].mu)
-        sigma.append(leaderboard[playerList.index(player)].sigma)
+        mu.append(ratingList[playerList.index(player)].mu)
+        sigma.append(ratingList[playerList.index(player)].sigma)
         print('Rank %d: %s - %f' % (position, player, leaderboard[playerList.index(player)]))
         position=position+1
         
@@ -114,7 +114,7 @@ def processNewTourney():
     #Format data into json 
     data = [
         {
-            'range': 'Test!H3:J',
+            'range': 'TrueSkill!H3:J',
             'values': list(zip(playerList,mu,sigma))
         },
     ]
